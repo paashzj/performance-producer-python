@@ -17,14 +17,15 @@
 # under the License.
 #
 
-import os
 
-import pulsar_service
+FROM ttbb/base
 
-if __name__ == '__main__':
-    print("performance producer start")
-    produce_type = os.environ.get("PRODUCE_TYPE")
-    if produce_type is None:
-        print("do nothing")
-    elif produce_type == "pulsar":
-        pulsar_service.start()
+RUN dnf install -yq pip && \
+    dnf clean all
+RUN pip install --no-cache-dir pulsar-client
+
+COPY . /opt/sh
+
+WORKDIR /opt/sh
+
+CMD ["/usr/bin/dumb-init", "python", "/opt/sh/main.py"]

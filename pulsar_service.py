@@ -19,12 +19,18 @@
 
 import os
 
-import pulsar_service
+import pulsar
 
-if __name__ == '__main__':
-    print("performance producer start")
-    produce_type = os.environ.get("PRODUCE_TYPE")
-    if produce_type is None:
-        print("do nothing")
-    elif produce_type == "pulsar":
-        pulsar_service.start()
+import random_util
+
+pulsar_host = os.environ.get("PULSAR_HOST", "localhost")
+pulsar_port = os.environ.get("PULSAR_PORT", "6650")
+pulsar_message_size = int(os.environ.get("PULSAR_MESSAGE_SIZE", "1024"))
+
+
+def start():
+    client = pulsar.Client('pulsar://{}:{}'.format(pulsar_host, pulsar_port))
+    producer = client.create_producer(os.environ.get("PULSAR_TOPIC"))
+    while True:
+        producer.send(random_util.rand_str(pulsar_message_size).encode('utf-8'))
+        producer.flush()

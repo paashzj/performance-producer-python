@@ -17,14 +17,9 @@
 # under the License.
 #
 
-import os
+import string
+import random
 
-import pulsar_service
 
-if __name__ == '__main__':
-    print("performance producer start")
-    produce_type = os.environ.get("PRODUCE_TYPE")
-    if produce_type is None:
-        print("do nothing")
-    elif produce_type == "pulsar":
-        pulsar_service.start()
+def rand_str(length):
+    return ''.join(random.choice(string.ascii_letters) for _ in range(length))
