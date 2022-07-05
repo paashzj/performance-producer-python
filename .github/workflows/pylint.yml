@@ -17,14 +17,27 @@
 # under the License.
 #
 
-import os
 
-import pulsar_service
+name: Pylint
 
-if __name__ == '__main__':
-    print("performance producer start")
-    produce_type = os.environ.get("PRODUCE_TYPE")
-    if produce_type is None:
-        print("do nothing")
-    elif produce_type == "pulsar":
-        pulsar_service.start()
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+      - name: Analysing the code with pylint
+        run: pylint --rcfile=pylint.rc **/*.py
