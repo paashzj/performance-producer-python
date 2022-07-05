@@ -22,7 +22,7 @@ FROM ttbb/base
 
 RUN dnf install -yq pip && \
     dnf clean all
-RUN pip install pulsar-client
+RUN pip install --no-cache-dir pulsar-client
 
 COPY . /opt/sh
 
